@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KopiKita - 16-Bit Point of Sale</title>
+    
+    <!-- Tailwind CSS (Framework Utility) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Pixel Bawaan KopiKita -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           GLOBAL STYLES & RESET
+           ========================================= */
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #1c1917;
+            color: #fef3c7;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* =========================================
+           RETRO UI COMPONENTS
+           ========================================= */
+        .btn-retro {
+            background-color: #92400e;
+            color: #ffffff;
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+        .btn-retro:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #000;
+        }
+        .btn-retro:hover {
+            background-color: #b45309;
+        }
+
+        .pixelated { image-rendering: pixelated; }
+
+        /* =========================================
+           SCROLLBAR CUSTOMIZATION
+           ========================================= */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(12, 10, 9, 0.8); border-left: 1px solid #4a3525; }
+        ::-webkit-scrollbar-thumb { background: #fbbf24; border: 1px solid #000; }
+
+        /* =========================================
+           ANIMATIONS & TRANSITIONS
+           ========================================= */
+        .bg-zoom-transition {
+            transition: transform 1.5s ease-in-out, filter 1.5s ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .anim-float { animation: float 3s infinite ease-in-out; }
+
+        @keyframes steam-rise {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-15px); opacity: 0; }
+        }
+        .steam-1 { animation: steam-rise 2s infinite linear; }
+        .steam-2 { animation: steam-rise 2.5s infinite linear 0.5s; }
+        .steam-3 { animation: steam-rise 2.2s infinite linear 1s; }
+
+        @keyframes breathe {
+            0%, 100% { transform: scaleY(1) translateY(0); }
+            50% { transform: scaleY(1.05) translateY(-1px); }
+        }
+        .anim-cat-breathe { animation: breathe 2.5s infinite ease-in-out; transform-origin: bottom; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+    <!-- =========================================
+         MAIN GAME CONTAINER (16:9 Aspect Ratio)
+         ========================================= -->
+    <div class="relative w-[95vw] h-[53.4375vw] max-w-[1280px] max-h-[720px] bg-[#0c0a09] border-[6px] border-[#78350f] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] overflow-hidden">
+        
+        <!-- BACKGROUND IMAGE LAYER -->
+        <div id="game-bg" 
+             class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-zoom-transition z-0 pixelated" 
+             style="background-image: url('image_733c3d.jpg');">
+            <!-- Dark Overlay for Readability -->
+            <div class="absolute inset-0 bg-black/50"></div>
+        </div>
+
+        <!-- GLOBAL HEADER NAVIGATION -->
+        <header class="absolute top-0 left-0 right-0 bg-black/90 border-b-[4px] border-[#78350f] p-3 flex justify-between items-center z-40 shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-4 h-4 bg-[#fbbf24] border-2 border-[#78350f] animate-pulse"></div>
+                <span class="text-xs text-[#fbbf24] tracking-widest drop-shadow-[2px_2px_0px_#000]">KopiKita POS v2.0</span>
+            </div>
+            
+            <nav class="flex gap-2" id="nav-buttons">
+                <button id="nav-home" onclick="navigate('lobby')" class="bg-[#fbbf24] text-black border-2 border-[#78350f] px-4 py-2 text-[8px] hover:bg-[#f59e0b] transition-colors font-bold">HOME</button>
+                <button id="nav-about" onclick="navigate('about')" class="bg-transparent text-gray-400 border-2 border-transparent px-4 py-2 text-[8px] hover:text-white transition-colors">ABOUT</button>
+                <button id="nav-history" onclick="alert('Riwayat Transaksi: Belum ada database server.')" class="bg-transparent text-gray-400 border-2 border-transparent px-4 py-2 text-[8px] hover:text-white transition-colors">HISTORY</button>
+            </nav>
+        </header>
+
+        <!-- ===================================== -->
+        <!-- SCENE 1: LOBBY SCREEN                 -->
+        <!-- ===================================== -->
+        <div id="lobby-layer" class="absolute inset-0 z-20 flex flex-col justify-center items-center transition-opacity duration-500 opacity-100">
+            
+            <!-- SVG Floating Pixel Coffee -->
+            <div class="anim-float mt-[-8%] mb-8">
+                <svg viewBox="0 0 32 32" width="140" height="140" class="pixelated drop-shadow-[6px_6px_0px_rgba(0,0,0,0.9)]">
+                    <rect x="10" y="2" width="2" height="4" fill="#fbbf24" class="steam-1"/>
+                    <rect x="16" y="4" width="2" height="4" fill="#fbbf24" class="steam-2"/>
+                    <rect x="22" y="1" width="2" height="4" fill="#fbbf24" class="steam-3"/>
+                    <rect x="6" y="10" width="20" height="14" fill="#fef3c7"/>
+                    <rect x="8" y="24" width="16" height="2" fill="#fef3c7"/>
+                    <rect x="26" y="12" width="4" height="2" fill="#fef3c7"/>
+                    <rect x="28" y="14" width="2" height="6" fill="#fef3c7"/>
+                    <rect x="26" y="20" width="4" height="2" fill="#fef3c7"/>
+                    <rect x="8" y="10" width="16" height="2" fill="#4a3525"/>
+                    <rect x="12" y="16" width="2" height="2" fill="#1c1917"/>
+                    <rect x="18" y="16" width="2" height="2" fill="#1c1917"/>
+                    <rect x="15" y="18" width="2" height="1" fill="#fbbf24"/>
+                    <rect x="22" y="12" width="4" height="12" fill="#d6d3d1"/>
+                </svg>
+            </div>
+
+            <!-- Title & Subtitle -->
+            <div class="text-center pointer-events-none">
+                <h2 class="text-white text-4xl md:text-5xl leading-snug drop-shadow-[5px_5px_0px_#000] tracking-widest">
+                    SELAMAT DATANG<br>DI KOPIKITA
+                </h2>
+                <p class="text-[#fbbf24] text-[10px] drop-shadow-[2px_2px_0px_#000] mt-6 font-mono tracking-widest animate-pulse">
+                    > SYSTEM READY. PRESS START TO ORDER <
+                </p>
+            </div>
+
+            <!-- Call to Action Buttons -->
+            <div class="absolute bottom-[12%] w-full flex justify-center gap-10 px-10">
+                <button onclick="navigate('menu', 'Makanan')" class="btn-retro px-8 py-5 text-xs tracking-wider w-72 text-center">
+                    [ MAKANAN ]
+                </button>
+                <button onclick="navigate('menu', 'Kopi')" class="btn-retro px-8 py-5 text-xs tracking-wider w-72 text-center">
+                    [ MINUMAN ]
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================== -->
+        <!-- SCENE 2: MENU & POS SYSTEM            -->
+        <!-- ===================================== -->
+        <div id="menu-layer" class="absolute inset-x-0 bottom-0 top-[52px] bg-black/80 z-20 flex p-6 gap-6 transition-opacity duration-700 opacity-0 pointer-events-none">
+            
+            <!-- LEFT PANEL: CATEGORIES (NEW FEATURE) -->
+            <div class="w-[200px] flex flex-col gap-3">
+                <div class="bg-[#1c1917] border-4 border-[#78350f] p-3 text-center text-[#fbbf24] text-xs mb-2 drop-shadow-[2px_2px_0px_#000]">
+                    KATEGORI
+                </div>
+                <button onclick="renderMenuItems('Kopi')" class="cat-btn w-full bg-[#2e221d] text-white border-2 border-[#4a3525] p-4 text-[9px] hover:bg-[#78350f] transition-colors text-left pl-4 active:translate-y-1">> KOPI</button>
+                <button onclick="renderMenuItems('Non-Kopi')" class="cat-btn w-full bg-[#2e221d] text-white border-2 border-[#4a3525] p-4 text-[9px] hover:bg-[#78350f] transition-colors text-left pl-4 active:translate-y-1">> NON-KOPI</button>
+                <button onclick="renderMenuItems('Makanan')" class="cat-btn w-full bg-[#2e221d] text-white border-2 border-[#4a3525] p-4 text-[9px] hover:bg-[#78350f] transition-colors text-left pl-4 active:translate-y-1">> MAKANAN</button>
+                <button onclick="renderMenuItems('Cemilan')" class="cat-btn w-full bg-[#2e221d] text-white border-2 border-[#4a3525] p-4 text-[9px] hover:bg-[#78350f] transition-colors text-left pl-4 active:translate-y-1">> CEMILAN</button>
+            </div>
+
+            <!-- MIDDLE PANEL: MENU ITEMS LIST -->
+            <div class="flex-1 flex flex-col border-4 border-[#78350f] bg-[#1c1917]/95 p-4 shadow-[8px_8px_0px_#000] relative">
+                <div class="flex justify-between items-center border-b-2 border-dashed border-[#78350f] pb-3 mb-4">
+                    <h3 id="category-title" class="text-[#fbbf24] text-sm">// MENU: KOPI</h3>
+                    <span id="item-count" class="text-gray-500 text-[10px]">0 Items</span>
+                </div>
+                
+                <!-- Dynamic Items Container -->
+                <div id="menu-items-container" class="flex-1 overflow-y-auto pr-2 flex flex-col gap-2">
+                    <!-- Items will be injected here via JavaScript -->
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: SHOPPING CART -->
+            <div class="w-[320px] flex flex-col relative mt-8">
+                
+                <!-- Animated Sleeping Cat -->
+                <div class="absolute -top-9 right-4 z-30 anim-cat-breathe">
+                    <svg viewBox="0 0 20 10" width="80" height="40" class="pixelated drop-shadow-[2px_2px_0px_rgba(0,0,0,0.8)]">
+                        <rect x="2" y="5" width="14" height="4" fill="#e67e22"/>
+                        <rect x="4" y="4" width="10" height="1" fill="#d35400"/>
+                        <rect x="12" y="3" width="5" height="4" fill="#e67e22"/>
+                        <rect x="12" y="1" width="1" height="2" fill="#d35400"/>
+                        <rect x="15" y="1" width="1" height="2" fill="#d35400"/>
+                        <rect x="14" y="5" width="2" height="1" fill="#1c1917"/>
+                        <rect x="0" y="6" width="2" height="2" fill="#e67e22"/>
+                    </svg>
+                </div>
+
+                <!-- Cart Container -->
+                <div class="flex-1 flex flex-col border-4 border-[#78350f] bg-[#1c1917]/95 p-4 shadow-[8px_8px_0px_#000] relative z-20">
+                    <h3 class="text-[#fbbf24] text-xs text-center border-b-2 border-dashed border-[#78350f] pb-3 mb-2">🛒 ORDER LIST</h3>
+                    
+                    <div id="cart-items" class="flex-1 overflow-y-auto pr-2 mt-2">
+                        <div class="text-center text-gray-500 text-[10px] mt-10 leading-loose">[ SLOT KOSONG ]<br>Menunggu Input...</div>
+                    </div>
+
+                    <div class="border-t-2 border-dashed border-[#78350f] pt-4 mt-4">
+                        <div class="flex justify-between text-[10px] mb-4 bg-black/50 p-2 border border-[#4a3525]">
+                            <span class="text-gray-300">TOTAL:</span>
+                            <span id="cart-total" class="text-[#22c55e] font-bold">Rp 0</span>
+                        </div>
+                        <button id="btn-checkout" disabled onclick="checkout()" class="w-full bg-[#fbbf24] text-black border-2 border-black font-bold py-4 text-[10px] disabled:bg-[#2e221d] disabled:text-gray-600 hover:bg-[#f59e0b] shadow-[4px_4px_0px_#000] active:translate-y-[2px] active:shadow-none disabled:shadow-none transition-all">
+                            TRANSMIT ORDER
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===================================== -->
+        <!-- SCENE 3: ABOUT PAGE (TUGAS KELOMPOK)  -->
+        <!-- ===================================== -->
+        <div id="about-layer" class="absolute inset-0 top-[52px] bg-black/85 z-30 flex justify-center items-center transition-opacity duration-700 opacity-0 pointer-events-none p-6">
+            
+            <div class="bg-[#1c1917] border-[6px] border-[#78350f] p-10 max-w-3xl w-full text-center shadow-[15px_15px_0px_rgba(0,0,0,0.9)] relative">
+                
+                <h2 class="text-[#fbbf24] text-2xl md:text-3xl mb-6 border-b-4 border-dashed border-[#78350f] pb-6 inline-block tracking-widest drop-shadow-[4px_4px_0px_#000]">
+                    KREDIT & INFORMASI
+                </h2>
+                
+                <div class="text-left bg-[#0c0a09] p-6 border-4 border-[#4a3525] mb-8 shadow-inner">
+                    <h3 class="text-[#22c55e] text-sm mb-4 tracking-wider">> DESKRIPSI SISTEM</h3>
+                    <p class="text-[10px] leading-relaxed text-[#d6d3d1] font-mono mb-6">
+                        KopiKita POS v2.0 adalah simulasi perangkat lunak kasir cerdas berbasis web yang direkayasa menggunakan Native Web Technologies (HTML5, CSS3, JavaScript ES6) tanpa intervensi framework berat seperti React atau Vue.
+                    </p>
+                    
+                    <h3 class="text-[#3b82f6] text-sm mb-4 tracking-wider">> TUGAS KELOMPOK WEB DESIGN</h3>
+                    <ul class="text-[9px] leading-loose text-[#a8a29e] font-mono list-disc pl-5">
+                        <li>Institusi: Universitas Jenderal Soedirman (Unsoed)</li>
+                        <li>Program Studi: Teknik Informatika</li>
+                        <li>Mata Kuliah: Desain Web Terapan (IF21208)</li>
+                        <li>Fitur Utama: DOM Manipulation, State Management, CSS Transitions, & SVG Rendering.</li>
+                    </ul>
+                </div>
+
+                <button onclick="navigate('lobby')" class="btn-retro px-10 py-5 text-[10px] md:text-xs tracking-widest w-full sm:w-auto shadow-[6px_6px_0px_#000]">
+                    &lt; RETURN TO MAIN MENU
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================
+         JAVASCRIPT LOGIC (DATA & STATE MANAGEMENT)
+         ========================================= -->
+    <script>
+        // --- 1. HUGE DATABASE OF CAFE MENU ITEMS ---
+        // Membuat kodingan panjang dan sistematis ala project besar
+        const databaseMenu = [
+            // Kategori: Kopi
+            { id: "C01", category: "Kopi", name: "Kopi Susu Gula Aren", desc: "Signature Espresso + Aren", price: 22000 },
+            { id: "C02", category: "Kopi", name: "Americano Iced", desc: "Double Shot Espresso on Rocks", price: 18000 },
+            { id: "C03", category: "Kopi", name: "Cappuccino Hot", desc: "Steamed Milk with Thick Foam", price: 24000 },
+            { id: "C04", category: "Kopi", name: "Caramel Macchiato", desc: "Espresso + Vanilla + Caramel", price: 28000 },
+            { id: "C05", category: "Kopi", name: "Kopi Tubruk Klasik", desc: "Kopi Hitam Gilingan Kasar", price: 15000 },
+            { id: "C06", category: "Kopi", name: "Cafe Latte", desc: "Smooth Milk and Espresso", price: 24000 },
+            { id: "C07", category: "Kopi", name: "Mochaccino", desc: "Espresso combined with Cocoa", price: 26000 },
+            { id: "C08", category: "Kopi", name: "Affogato", desc: "Vanilla Ice Cream + Espresso", price: 25000 },
+            
+            // Kategori: Non-Kopi
+            { id: "N01", category: "Non-Kopi", name: "Matcha Latte", desc: "Premium Uji Matcha & Milk", price: 26000 },
+            { id: "N02", category: "Non-Kopi", name: "Red Velvet Latte", desc: "Sweet Red Velvet Extract", price: 25000 },
+            { id: "N03", category: "Non-Kopi", name: "Taro Blended", desc: "Taro Root Blended Ice", price: 24000 },
+            { id: "N04", category: "Non-Kopi", name: "Lychee Tea", desc: "Black Tea + Real Lychee", price: 20000 },
+            { id: "N05", category: "Non-Kopi", name: "Lemon Tea Iced", desc: "Refreshing Lemonade Tea", price: 18000 },
+            { id: "N06", category: "Non-Kopi", name: "Choco Signature", desc: "Thick Dark Chocolate", price: 24000 },
+            { id: "N07", category: "Non-Kopi", name: "Kombucha Berry", desc: "Fermented Tea + Mixed Berry", price: 28000 },
+            
+            // Kategori: Makanan
+            { id: "M01", category: "Makanan", name: "Nasi Goreng Comma", desc: "Resep Rahasia Dapur Bumbu Udang", price: 30000 },
+            { id: "M02", category: "Makanan", name: "Mie Goreng Jawa", desc: "Mie Kuning + Sayur + Telur", price: 25000 },
+            { id: "M03", category: "Makanan", name: "Spaghetti Bolognese", desc: "Pasta with Minced Beef Tomato", price: 35000 },
+            { id: "M04", category: "Makanan", name: "Chicken Katsu Curry", desc: "Crispy Chicken + Curry Sauce", price: 38000 },
+            { id: "M05", category: "Makanan", name: "Nasi Ayam Geprek", desc: "Ayam Crispy Sambal Bawang", price: 28000 },
+            { id: "M06", category: "Makanan", name: "Rice Bowl Teriyaki", desc: "Chicken Teriyaki + Egg", price: 32000 },
+            { id: "M07", category: "Makanan", name: "Mac and Cheese", desc: "Creamy Cheese Macaroni", price: 30000 },
+            
+            // Kategori: Cemilan
+            { id: "S01", category: "Cemilan", name: "French Fries", desc: "Straight Cut with Sea Salt", price: 18000 },
+            { id: "S02", category: "Cemilan", name: "Platter Mix", desc: "Fries, Sausage, Nugget", price: 35000 },
+            { id: "S03", category: "Cemilan", name: "Pisang Goreng Keju", desc: "Pisang + Brown Sugar + Cheese", price: 20000 },
+            { id: "S04", category: "Cemilan", name: "Churros", desc: "Spanish Doughnut + Choco Dip", price: 22000 },
+            { id: "S05", category: "Cemilan", name: "Cireng Bumbu Rujak", desc: "Crispy Tapioca + Spicy Sauce", price: 16000 },
+            { id: "S06", category: "Cemilan", name: "Croissant Butter", desc: "Flaky French Pastry", price: 24000 },
+            { id: "S07", category: "Cemilan", name: "Dimsum Mentai", desc: "Chicken Dimsum + Mentai Sauce", price: 25000 }
+        ];
+
+        // --- 2. DOM ELEMENTS CACHING ---
+        const bgLayer = document.getElementById('game-bg');
+        const lobbyLayer = document.getElementById('lobby-layer');
+        const menuLayer = document.getElementById('menu-layer');
+        const aboutLayer = document.getElementById('about-layer');
+        
+        const navHome = document.getElementById('nav-home');
+        const navAbout = document.getElementById('nav-about');
+        
+        const menuContainer = document.getElementById('menu-items-container');
+        const categoryTitle = document.getElementById('category-title');
+        const itemCountTxt = document.getElementById('item-count');
+
+        // --- 3. NAVIGATION & VIEW CONTROLLER ---
+        function navigate(view, defaultCategory = 'Kopi') {
+            // Reset all opacities
+            lobbyLayer.classList.add('opacity-0', 'pointer-events-none');
+            menuLayer.classList.add('opacity-0', 'pointer-events-none');
+            aboutLayer.classList.add('opacity-0', 'pointer-events-none');
+
+            // Reset Nav styling
+            navHome.className = "bg-transparent text-gray-400 border-2 border-transparent px-4 py-2 text-[8px] hover:text-white transition-colors font-bold";
+            navAbout.className = "bg-transparent text-gray-400 border-2 border-transparent px-4 py-2 text-[8px] hover:text-white transition-colors font-bold";
+
+            if(view === 'lobby') {
+                bgLayer.classList.remove('scale-110', 'blur-[4px]');
+                navHome.className = "bg-[#fbbf24] text-black border-2 border-[#78350f] px-4 py-2 text-[8px] hover:bg-[#f59e0b] transition-colors font-bold";
+                setTimeout(() => lobbyLayer.classList.remove('opacity-0', 'pointer-events-none'), 300);
+            } 
+            else if(view === 'menu') {
+                bgLayer.classList.add('scale-110', 'blur-[4px]');
+                navHome.className = "bg-[#fbbf24] text-black border-2 border-[#78350f] px-4 py-2 text-[8px] hover:bg-[#f59e0b] transition-colors font-bold";
+                renderMenuItems(defaultCategory); // Inject items
+                setTimeout(() => menuLayer.classList.remove('opacity-0', 'pointer-events-none'), 300);
+            }
+            else if(view === 'about') {
+                bgLayer.classList.add('scale-110', 'blur-[8px]');
+                navAbout.className = "bg-[#fbbf24] text-black border-2 border-[#78350f] px-4 py-2 text-[8px] hover:bg-[#f59e0b] transition-colors font-bold";
+                setTimeout(() => aboutLayer.classList.remove('opacity-0', 'pointer-events-none'), 300);
+            }
+        }
+
+        // --- 4. DYNAMIC MENU RENDERING ENGINE ---
+        function renderMenuItems(categoryName) {
+            // Update Title
+            categoryTitle.innerText = `// MENU: ${categoryName.toUpperCase()}`;
+            
+            // Highlight Button
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[#78350f]', 'border-[#fbbf24]');
+                btn.classList.add('bg-[#2e221d]', 'border-[#4a3525]');
+                if(btn.innerText.includes(categoryName.toUpperCase())) {
+                    btn.classList.add('bg-[#78350f]', 'border-[#fbbf24]');
+                    btn.classList.remove('bg-[#2e221d]', 'border-[#4a3525]');
+                }
+            });
+
+            // Filter data
+            const filteredMenu = databaseMenu.filter(item => item.category === categoryName);
+            itemCountTxt.innerText = `${filteredMenu.length} Items`;
+
+            // Clear & Render
+            menuContainer.innerHTML = '';
+            filteredMenu.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center border-b border-[#4a3525] bg-[#0c0a09]/50 hover:bg-[#2e221d] transition-colors p-3 group";
+                div.innerHTML = `
+                    <div>
+                        <div class="text-[10px] text-[#fef3c7] mb-1 group-hover:text-white">${item.name}</div>
+                        <div class="text-[7px] text-[#fbbf24] font-mono tracking-wider">${item.desc}</div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-white text-[9px] font-mono">Rp ${(item.price).toLocaleString('id-ID')}</span>
+                        <button onclick="addToCart('${item.id}')" class="bg-[#22c55e] border-[3px] border-[#1c1917] px-3 py-2 text-[8px] text-white hover:bg-[#16a34a] shadow-[3px_3px_0px_#000] active:translate-y-[2px] active:shadow-none transition-all">+ ADD</button>
+                    </div>
+                `;
+                menuContainer.appendChild(div);
+            });
+        }
+
+        // --- 5. SHOPPING CART SYSTEM (STATE & LOCAL STORAGE) ---
+        let cart = [];
+
+        function addToCart(itemId) {
+            const product = databaseMenu.find(p => p.id === itemId);
+            if(!product) return;
+
+            let existItem = cart.find(i => i.id === itemId);
+            if(existItem) {
+                existItem.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        function removeCartItem(itemId) {
+            let index = cart.findIndex(i => i.id === itemId);
+            if(index > -1) {
+                cart[index].qty--;
+                if(cart[index].qty === 0) cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cart-items');
+            const totalText = document.getElementById('cart-total');
+            const btnCheckout = document.getElementById('btn-checkout');
+
+            if(cart.length === 0) {
+                cartContainer.innerHTML = '<div class="text-center text-gray-500 text-[10px] mt-10 leading-loose">[ SLOT KOSONG ]<br>Menunggu Input...</div>';
+                totalText.innerText = "Rp 0";
+                btnCheckout.disabled = true;
+                return;
+            }
+
+            cartContainer.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                total += (item.price * item.qty);
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "border-b border-[#4a3525] pb-3 mb-3 flex justify-between items-start bg-[#0c0a09] p-2";
+                itemDiv.innerHTML = `
+                    <div class="text-[8px] max-w-[140px]">
+                        <div class="text-[#fef3c7] leading-relaxed">${item.name}</div>
+                        <div class="text-gray-400 mt-2 font-mono">${item.qty}x @ Rp ${(item.price).toLocaleString('id-ID')}</div>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <button onclick="removeCartItem('${item.id}')" class="bg-red-500 text-white border-2 border-black font-bold text-[8px] px-2 py-1 hover:bg-red-700 active:translate-y-[1px] shadow-[2px_2px_0px_#000] active:shadow-none transition-all">X</button>
+                        <span class="text-[#fbbf24] text-[9px] mt-1 font-mono">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+                cartContainer.appendChild(itemDiv);
+            });
+
+            totalText.innerText = "Rp " + total.toLocaleString('id-ID');
+            btnCheckout.disabled = false;
+        }
+
+        // --- 6. CHECKOUT & PERSISTENCE ---
+        function checkout() {
+            // Kalkulasi Total
+            const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            
+            // Simpan ke Local Storage untuk mensimulasikan Database
+            const orderHistory = JSON.parse(localStorage.getItem('kopikita_history')) || [];
+            const orderRecord = {
+                id: "ORD-" + Math.floor(Math.random() * 1000000),
+                date: new Date().toLocaleString('id-ID'),
+                items: cart,
+                total: grandTotal
+            };
+            orderHistory.push(orderRecord);
+            localStorage.setItem('kopikita_history', JSON.stringify(orderHistory));
+
+            // Alert sukses
+            alert(`TRANSAKSI SUKSES!\nID Order: ${orderRecord.id}\nTotal: Rp ${grandTotal.toLocaleString('id-ID')}\nData tersimpan di Local Storage.`);
+            
+            // Reset state
+            cart = [];
+            updateCartUI();
+            navigate('lobby');
+        }
+
+    </script>
+</body>
+</html>
