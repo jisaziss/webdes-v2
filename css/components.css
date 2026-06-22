@@ -1,0 +1,93 @@
+﻿.site-header {
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    background-color: #140e07;
+    border-color: rgba(140, 90, 40, 0.25);
+}
+.site-brand {
+    letter-spacing: 0.18em;
+    color: #f8e7c9;
+}
+.nav-link,
+.footer-link {
+    display: inline-flex;
+    padding: 0.75rem 1rem;
+    border-radius: 9999px;
+    color: #e0d6c2;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.nav-link:hover,
+.footer-link:hover {
+    background-color: rgba(251, 191, 36, 0.14);
+    color: #fff7e6;
+}
+.btn-primary {
+    background-color: #d97706;
+    color: #0f172a;
+}
+.btn-primary:hover {
+    background-color: #c2410c;
+}
+.btn-secondary {
+    border-color: #6b4c2d;
+    color: #e0d6c2;
+}
+.btn-secondary:hover {
+    color: #fbbf24;
+    border-color: #fbbf24;
+}
+.btn-filter {
+    background-color: rgba(120, 87, 49, 0.14);
+    color: #e0d6c2;
+    border: 1px solid rgba(120, 87, 49, 0.24);
+    border-radius: 9999px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.btn-filter:hover {
+    background-color: rgba(251, 191, 36, 0.14);
+    border-color: rgba(251, 191, 36, 0.36);
+}
+.btn-filter.active {
+    background-color: #d97706;
+    color: #0f172a;
+    border-color: #d97706;
+}
+.card-box {
+    border-radius: 1.75rem;
+    border: 1px solid rgba(190, 145, 75, 0.18);
+    background-color: rgba(30, 18, 9, 0.94);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+.team-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 1.75rem;
+    border: 1px solid rgba(190, 145, 75, 0.12);
+    background: linear-gradient(180deg, rgba(30, 18, 9, 0.97), rgba(18, 10, 5, 0.92));
+}
+.team-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 1.5rem;
+}
+.team-card h3 {
+    margin: 0;
+}
+.team-card p {
+    margin: 0;
+}
+@media (max-width: 640px) {
+    .nav-menu {
+        gap: 0.75rem;
+    }
+    .btn-primary,
+    .btn-secondary,
+    .btn-filter {
+        width: 100%;
+    }
+    .site-header {
+        padding-bottom: 0.5rem;
+    }
+}

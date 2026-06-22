@@ -1,0 +1,10 @@
+﻿.hero-section {
+    min-height: 70vh;
+}
+.hero-section h1,
+.features-section h2 {
+    letter-spacing: -0.03em;
+}
+.hero-section .rounded-[2rem] {
+    backdrop-filter: blur(10px);
+}

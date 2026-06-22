@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KopiKita Cafe | Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body class="bg-[#120a04] text-amber-100">
+    <header class="site-header fixed inset-x-0 top-0 z-40 bg-[#140e07]/95 border-b border-amber-900 backdrop-blur-sm">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+            <a href="../index.html" class="site-brand text-lg font-semibold tracking-[0.2em] text-amber-200">KopiKita Cafe</a>
+            <button id="nav-toggle" class="nav-toggle inline-flex items-center gap-2 rounded-full border border-[#593a22] bg-[#2c180a] px-4 py-2 text-sm text-amber-100 sm:hidden">
+                <span>Menu</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <nav id="nav-menu" class="nav-menu mt-4 hidden flex-col gap-2 text-sm sm:mt-0 sm:flex sm:flex-row sm:items-center sm:gap-6">
+                <a href="../index.html" class="nav-link">Beranda</a>
+                <a href="about.html" class="nav-link">Tentang Kami</a>
+                <a href="menu.html" class="nav-link">Menu</a>
+                <a href="#menu" class="nav-link">Galeri</a>
+                <a href="checkout.html" class="relative inline-flex items-center gap-2 rounded-full border border-[#593a22] bg-[#2c180a] px-4 py-2 text-sm text-amber-100 hover:bg-[#3a2412] transition">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span>Keranjang</span>
+                    <span id="cart-notification" class="hidden absolute -top-2 -right-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+    <main class="pt-28 px-4 pb-16 sm:px-6">
+        <section class="mx-auto max-w-6xl space-y-10">
+            <div class="rounded-[2rem] border border-amber-900 bg-[#221505]/90 p-8 shadow-2xl shadow-[#000000]/30 sm:p-10">
+                <p class="text-sm uppercase tracking-[0.3em] text-amber-200">Menu Cafe</p>
+                <h1 class="mt-4 text-3xl font-bold text-amber-100 sm:text-4xl">Menu Unggulan KopiKita</h1>
+                <p class="mt-6 max-w-3xl text-base leading-8 text-amber-200">Pilih dari rangkaian kopi, minuman non-kopi, dan cemilan lezat yang cocok untuk semua suasana.</p>
+            </div>
+            <section id="menu" class="rounded-[2rem] border border-amber-900 bg-[#221505]/90 p-6 shadow-xl shadow-[#000000]/20">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm uppercase tracking-[0.3em] text-amber-300">Filter</p>
+                        <h2 class="mt-3 text-2xl font-semibold text-amber-100">Pilih kategori menu</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button data-filter="Semua" class="menu-filter btn-filter active">Semua</button>
+                        <button data-filter="Kopi" class="menu-filter btn-filter">Kopi</button>
+                        <button data-filter="Minuman" class="menu-filter btn-filter">Minuman</button>
+                        <button data-filter="Cemilan" class="menu-filter btn-filter">Cemilan</button>
+                        <button data-filter="Makanan" class="menu-filter btn-filter">Makanan</button>
+                    </div>
+                </div>
+                <div class="mt-8 grid gap-6 lg:grid-cols-3" id="menu-grid"></div>
+                <p class="mt-6 text-sm text-amber-200" id="menu-count"></p>
+            </section>
+        </section>
+    </main>
+    <footer class="border-t border-amber-900 bg-[#120a04] px-4 py-10 text-amber-200 sm:px-6">
+        <div class="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-amber-200">Hak cipta &copy; 2026 KopiKita Cafe.</p>
+            <p class="text-sm text-amber-200">Menu kami dapat difilter berdasarkan kategori dan menampilkan pilihan terbaik setiap hari.</p>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+    <script>
+        // Initialize cart notification on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            showCartNotification();
+        });
+    </script>
+</body>
+</html>
