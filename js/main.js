@@ -1,6 +1,10 @@
 ﻿const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 
+// Modal and Menu Item State
+let currentModalItem = null;
+let modalQty = 1;
+
 // Shopping Cart System
 let cart = JSON.parse(localStorage.getItem('kopikitaCart')) || [];
 
@@ -47,6 +51,69 @@ function showCartNotification() {
         notification.textContent = count;
         notification.classList.remove('hidden');
     }
+}
+
+// Modal Functions
+function openMenuModal(item) {
+    currentModalItem = item;
+    modalQty = 1;
+    
+    const modal = document.getElementById('menu-modal');
+    const modalImage = document.getElementById('modal-image').querySelector('img');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCategory = document.getElementById('modal-category');
+    const modalDescription = document.getElementById('modal-description');
+    const modalPrice = document.getElementById('modal-price');
+    const modalQtySpan = document.getElementById('modal-qty');
+    
+    modalImage.src = item.image;
+    modalImage.alt = item.title;
+    modalTitle.textContent = item.title;
+    modalCategory.textContent = item.category;
+    modalDescription.textContent = item.description;
+    modalPrice.textContent = item.price;
+    modalQtySpan.textContent = '1';
+    
+    modal.classList.remove('hidden');
+}
+
+function closeMenuModal() {
+    const modal = document.getElementById('menu-modal');
+    modal.classList.add('hidden');
+    currentModalItem = null;
+    modalQty = 1;
+}
+
+function increaseQtyModal() {
+    modalQty++;
+    document.getElementById('modal-qty').textContent = modalQty;
+}
+
+function decreaseQtyModal() {
+    if (modalQty > 1) {
+        modalQty--;
+        document.getElementById('modal-qty').textContent = modalQty;
+    }
+}
+
+function addToCartFromModal() {
+    if (!currentModalItem) return;
+    
+    for (let i = 0; i < modalQty; i++) {
+        addToCart(currentModalItem);
+    }
+    
+    closeMenuModal();
+    
+    // Show success message
+    const notification = document.createElement('div');
+    notification.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-full shadow-lg animate-in fade-in duration-300 z-40';
+    notification.textContent = `${currentModalItem.title} × ${modalQty} ditambahkan ke keranjang!`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
 
 function initializeNavToggle() {
@@ -176,7 +243,7 @@ function renderMenu(filter = 'Semua') {
     if (!grid || !count) return;
     const filtered = filter === 'Semua' ? menuData : menuData.filter((item) => item.category === filter);
     grid.innerHTML = filtered.map((item) => `
-        <article class="card-box p-6">
+        <article class="card-box p-6 cursor-pointer hover:shadow-lg hover:shadow-amber-900/50 transition">
             <div class="mb-4 overflow-hidden rounded-3xl bg-[#2d1509]">
                 <img src="${item.image}" alt="${item.title}" class="h-52 w-full object-cover">
             </div>
@@ -188,22 +255,21 @@ function renderMenu(filter = 'Semua') {
                 <h3 class="text-2xl font-semibold text-amber-100">${item.title}</h3>
                 <p class="text-amber-200 leading-7">${item.description}</p>
                 <div class="flex flex-wrap gap-3">
-                    <button data-add-cart-item="${item.title}" class="btn-secondary inline-flex rounded-full px-4 py-2 text-sm font-semibold">Pesan Sekarang</button>
+                    <button data-menu-item="${item.title}" class="btn-secondary inline-flex rounded-full px-4 py-2 text-sm font-semibold">Lihat Detail</button>
                 </div>
             </div>
         </article>
     `).join('');
     count.textContent = `${filtered.length} item menu ditampilkan.`;
     
-    // Setup add to cart buttons
-    document.querySelectorAll('[data-add-cart-item]').forEach(btn => {
+    // Setup menu item click handlers
+    document.querySelectorAll('[data-menu-item]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const itemTitle = btn.dataset.addCartItem;
+            const itemTitle = btn.dataset.menuItem;
             const item = menuData.find(m => m.title === itemTitle);
             if (item) {
-                addToCart(item);
-                alert(`${item.title} ditambahkan ke keranjang!`);
+                openMenuModal(item);
             }
         });
     });
@@ -221,9 +287,21 @@ function setupMenuFilters() {
     });
 }
 
+function initializeModal() {
+    const modal = document.getElementById('menu-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeMenuModal();
+            }
+        });
+    }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
     initializeNavToggle();
     setupSmoothScroll();
     renderMenu();
     setupMenuFilters();
+    initializeModal();
 });

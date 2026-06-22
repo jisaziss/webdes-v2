@@ -61,6 +61,50 @@
             </section>
         </section>
     </main>
+
+    <!-- Modal Popup untuk Detail Menu -->
+    <div id="menu-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+        <div class="card-box w-full max-w-md rounded-3xl border border-amber-900 p-6 shadow-2xl animate-in fade-in duration-300">
+            <button onclick="closeMenuModal()" class="absolute top-4 right-4 text-amber-200 hover:text-amber-100 transition">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            
+            <div id="modal-image" class="mb-6 overflow-hidden rounded-2xl bg-[#2d1509] h-64">
+                <img src="" alt="" class="h-full w-full object-cover">
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.2em] text-amber-300" id="modal-category"></p>
+                    <h2 class="text-3xl font-bold text-amber-100 mt-2" id="modal-title"></h2>
+                </div>
+                
+                <p class="text-amber-200 leading-7" id="modal-description"></p>
+                
+                <div class="flex items-center justify-between py-4 border-y border-amber-800/30">
+                    <span class="text-sm text-amber-300">Harga:</span>
+                    <span class="text-2xl font-bold text-amber-100" id="modal-price"></span>
+                </div>
+                
+                <div class="space-y-3">
+                    <label class="text-sm text-amber-300">Jumlah:</label>
+                    <div class="flex items-center gap-3 bg-[#2d1509] rounded-full p-3 w-fit">
+                        <button onclick="decreaseQtyModal()" class="text-amber-100 hover:text-amber-200 transition font-bold text-lg">−</button>
+                        <span id="modal-qty" class="text-amber-100 font-semibold min-w-8 text-center">1</span>
+                        <button onclick="increaseQtyModal()" class="text-amber-100 hover:text-amber-200 transition font-bold text-lg">+</button>
+                    </div>
+                </div>
+                
+                <button onclick="addToCartFromModal()" class="btn-primary w-full rounded-full py-3 font-semibold text-lg transition hover:bg-amber-700">
+                    Masukan ke Keranjang
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer class="border-t border-amber-900 bg-[#120a04] px-4 py-10 text-amber-200 sm:px-6">
         <div class="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-sm text-amber-200">Hak cipta &copy; 2026 KopiKita Cafe.</p>
